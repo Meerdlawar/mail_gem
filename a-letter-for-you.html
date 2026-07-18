@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A letter for you 💌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Caveat:wght@500;600&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blush:#FBE3EA;
+    --blush-deep:#F6D2DD;
+    --peony:#F2A6BC;
+    --peony-dark:#E68DA8;
+    --peony-inner:#D97A97;
+    --rose:#C4506E;
+    --rose-dark:#A93D5B;
+    --cream:#FFFBF2;
+    --ink:#6B4A54;
+    --gold:#D9A441;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    font-family:'Quicksand', system-ui, sans-serif;
+    background:
+      radial-gradient(ellipse at 20% 15%, #FFF0F4 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, #FDE8EF 0%, transparent 50%),
+      var(--blush);
+    overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* ---------- floating hearts backdrop ---------- */
+  .sky{ position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+  .sky span{
+    position:absolute; bottom:-6vh;
+    color:var(--peony);
+    animation:floatUp linear infinite;
+    opacity:0;
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) rotate(-8deg); opacity:0; }
+    12%{ opacity:.28; }
+    88%{ opacity:.28; }
+    100%{ transform:translateY(-112vh) rotate(10deg); opacity:0; }
+  }
+
+  /* ---------- stage ---------- */
+  .stage{ position:relative; z-index:2; text-align:center; }
+  .envelope-wrap{
+    position:relative;
+    transform:rotate(-2.5deg);
+    transition:opacity .6s ease, filter .6s ease, transform .6s ease;
+  }
+  .envelope-wrap.dimmed{ opacity:0; filter:blur(6px); transform:rotate(-2.5deg) scale(.92); pointer-events:none; }
+
+  .envelope{
+    position:relative;
+    width:min(86vw,360px);
+    aspect-ratio:340/224;
+    margin:0 auto;
+    filter:drop-shadow(0 18px 30px rgba(196,80,110,.28));
+  }
+  .env-back{
+    position:absolute; inset:0;
+    background:var(--peony-dark);
+    border-radius:12px;
+    z-index:1;
+  }
+
+  /* the letter (peeks out from inside) */
+  .letter{
+    position:absolute;
+    left:5%; top:5%;
+    width:90%; height:92%;
+    background:var(--cream);
+    border-radius:8px;
+    box-shadow:0 4px 14px rgba(107,74,84,.18);
+    z-index:2;
+    transition:transform .75s cubic-bezier(.33,1,.55,1);
+    overflow:hidden;
+  }
+  .letter .peek{
+    position:absolute; inset:0;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding-top:14px;
+    font-family:'Great Vibes', 'Brush Script MT', cursive;
+    color:var(--rose);
+    font-size:clamp(1.3rem,5vw,1.7rem);
+    opacity:0; transition:opacity .4s ease .3s;
+  }
+  .envelope.open .letter{ transform:translateY(-58%); }
+  .envelope.open .letter .peek{ opacity:1; }
+
+  /* front pocket with V-fold */
+  .env-front{
+    position:absolute; inset:0;
+    background:var(--peony);
+    clip-path:polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
+    border-radius:12px;
+    z-index:3;
+  }
+  .env-front::after{ /* subtle side-fold shading */
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(115deg, rgba(255,255,255,.28) 0%, transparent 38%),
+               linear-gradient(-115deg, rgba(0,0,0,.06) 0%, transparent 38%);
+    clip-path:inherit;
+  }
+  .env-name{
+    position:absolute; left:50%; bottom:16%;
+    transform:translateX(-50%);
+    z-index:4;
+    font-family:'Great Vibes', 'Brush Script MT', cursive;
+    color:#fff;
+    font-size:clamp(1.7rem,7vw,2.3rem);
+    text-shadow:0 2px 6px rgba(169,61,91,.45);
+    pointer-events:none;
+    transition:opacity .4s ease;
+  }
+  .envelope.open .env-name{ opacity:0; }
+
+  /* top flap */
+  .flap{
+    position:absolute; left:0; top:0;
+    width:100%; height:54%;
+    background:linear-gradient(to bottom, var(--peony-inner), var(--peony-dark));
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    border-radius:12px 12px 0 0;
+    transform-origin:top center;
+    transition:transform .8s cubic-bezier(.6,.05,.28,.99);
+    z-index:5;
+    backface-visibility:hidden;
+  }
+  .envelope.open .flap{ transform:rotateX(180deg); }
+  .envelope.flap-behind .flap{ z-index:1; }
+
+  /* ---------- wax seal (the signature moment) ---------- */
+  .seal{
+    position:absolute; left:50%; top:46%;
+    transform:translate(-50%,-50%);
+    width:clamp(58px,17vw,72px); height:clamp(58px,17vw,72px);
+    border:none; cursor:pointer;
+    border-radius:50%;
+    background:radial-gradient(circle at 34% 30%, #E0768F, var(--rose) 55%, var(--rose-dark));
+    box-shadow:0 4px 10px rgba(169,61,91,.5),
+               inset 0 -3px 6px rgba(0,0,0,.22),
+               inset 0 3px 5px rgba(255,255,255,.3);
+    color:#FFE9EF;
+    font-size:clamp(1.5rem,5vw,1.9rem);
+    display:flex; align-items:center; justify-content:center;
+    z-index:6;
+    transition:transform .25s ease, opacity .35s ease;
+    animation:sealPulse 2.4s ease-in-out infinite;
+  }
+  .seal::before{ /* pressed rim */
+    content:""; position:absolute; inset:6px;
+    border-radius:50%;
+    border:2px dashed rgba(255,233,239,.55);
+  }
+  .seal:hover, .seal:focus-visible{ transform:translate(-50%,-50%) scale(1.08); animation-play-state:paused; }
+  .seal:focus-visible{ outline:3px solid var(--gold); outline-offset:3px; }
+  @keyframes sealPulse{
+    0%,100%{ box-shadow:0 4px 10px rgba(169,61,91,.5), 0 0 0 0 rgba(196,80,110,.45), inset 0 -3px 6px rgba(0,0,0,.22), inset 0 3px 5px rgba(255,255,255,.3); }
+    50%{ box-shadow:0 4px 10px rgba(169,61,91,.5), 0 0 0 14px rgba(196,80,110,0), inset 0 -3px 6px rgba(0,0,0,.22), inset 0 3px 5px rgba(255,255,255,.3); }
+  }
+  .seal.cracked{
+    transform:translate(-50%,-50%) scale(1.25) rotate(14deg);
+    opacity:0; pointer-events:none; animation:none;
+  }
+
+  .hint{
+    margin-top:26px;
+    color:var(--rose);
+    font-size:.95rem; letter-spacing:.14em;
+    text-transform:lowercase;
+    opacity:.85;
+    transition:opacity .4s ease;
+  }
+  .hint.hidden{ opacity:0; }
+
+  /* ---------- heart burst particles ---------- */
+  .burst{ position:fixed; left:0; top:0; z-index:50; pointer-events:none;
+    font-size:1rem; will-change:transform,opacity;
+    animation:burstFly .9s cubic-bezier(.2,.7,.3,1) forwards; }
+  @keyframes burstFly{
+    to{ transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.4); opacity:0; }
+  }
+
+  /* ---------- reading view ---------- */
+  .reading-card{
+    position:fixed; left:50%; top:50%;
+    transform:translate(-50%,-46%) scale(.9);
+    width:min(90vw,430px);
+    max-height:84vh;
+    background:var(--cream);
+    border-radius:14px;
+    box-shadow:0 24px 60px rgba(169,61,91,.3);
+    padding:clamp(26px,6vw,40px) clamp(22px,6vw,38px);
+    overflow-y:auto;
+    opacity:0; pointer-events:none;
+    transition:opacity .55s ease, transform .55s cubic-bezier(.33,1,.5,1);
+    z-index:20;
+  }
+  .reading-card.show{
+    opacity:1; pointer-events:auto;
+    transform:translate(-50%,-50%) scale(1);
+  }
+  .reading-card::before{ /* faint top fold line */
+    content:""; position:absolute; left:8%; right:8%; top:0;
+    height:1px; background:linear-gradient(90deg,transparent,var(--blush-deep),transparent);
+  }
+  .salutation{
+    font-family:'Great Vibes', 'Brush Script MT', cursive;
+    font-weight:400;
+    color:var(--rose);
+    font-size:clamp(1.9rem,7vw,2.5rem);
+    margin-bottom:18px;
+  }
+  .reading-card p{
+    font-family:'Caveat', 'Comic Sans MS', cursive;
+    font-weight:500;
+    color:var(--ink);
+    font-size:clamp(1.25rem,4.6vw,1.45rem);
+    line-height:1.55;
+    margin-bottom:14px;
+    text-align:left;
+  }
+  .signoff{
+    margin-top:22px !important;
+  }
+  .sig{
+    display:block;
+    font-family:'Great Vibes', 'Brush Script MT', cursive;
+    color:var(--rose);
+    font-size:clamp(1.7rem,6vw,2.1rem);
+    margin-top:4px;
+  }
+  .ps{ font-size:clamp(1.05rem,4vw,1.2rem) !important; opacity:.8; }
+
+  /* staggered line reveal */
+  .reading-card .line{ opacity:0; transform:translateY(10px);
+    transition:opacity .6s ease, transform .6s ease; }
+  .reading-card.show .line{ opacity:1; transform:translateY(0); }
+
+  .fold-btn{
+    position:fixed; left:50%; bottom:4.5vh;
+    transform:translateX(-50%);
+    z-index:21;
+    border:none; cursor:pointer;
+    font-family:'Quicksand', sans-serif; font-weight:500;
+    font-size:.92rem; letter-spacing:.08em;
+    color:var(--rose);
+    background:rgba(255,255,255,.75);
+    backdrop-filter:blur(4px);
+    padding:11px 22px;
+    border-radius:999px;
+    box-shadow:0 6px 18px rgba(196,80,110,.25);
+    opacity:0; pointer-events:none;
+    transition:opacity .45s ease, transform .2s ease;
+  }
+  .fold-btn.show{ opacity:1; pointer-events:auto; }
+  .fold-btn:hover{ transform:translateX(-50%) scale(1.05); }
+  .fold-btn:focus-visible{ outline:3px solid var(--gold); outline-offset:3px; }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    .sky span{ animation:none; opacity:.18; bottom:auto; top:calc(var(--y,50)*1%); }
+    .seal{ animation:none; }
+    .flap, .letter, .reading-card, .envelope-wrap{ transition-duration:.01s !important; }
+    .reading-card .line{ transition-duration:.01s; }
+    .burst{ animation-duration:.01s; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿
+     ✏️  EDIT YOUR MESSAGE — everything you'd want to change
+         is right below: the name on the envelope, the
+         greeting, the letter lines, and the signature.
+     ✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿✿ -->
+
+<div class="sky" id="sky" aria-hidden="true"></div>
+
+<main class="stage">
+  <div class="envelope-wrap" id="envWrap">
+    <div class="envelope" id="envelope">
+      <div class="env-back"></div>
+
+      <div class="letter" aria-hidden="true">
+        <div class="peek">a little something…</div>
+      </div>
+
+      <div class="env-front"></div>
+
+      <!-- ✏️ name on the front of the envelope -->
+      <div class="env-name">For you ♡</div>
+
+      <div class="flap"></div>
+
+      <button class="seal" id="seal" aria-label="Break the seal and open your letter">♥</button>
+    </div>
+    <p class="hint" id="hint">tap the seal ♡</p>
+  </div>
+</main>
+
+<!-- the letter, once it's out of the envelope -->
+<article class="reading-card" id="readingCard" aria-live="polite">
+  <!-- ✏️ greeting -->
+  <h1 class="salutation line">To my favorite person,</h1>
+
+  <!-- ✏️ your message — add or remove <p class="line"> lines freely -->
+  <p class="line">I couldn't fit everything I feel into a text, so I made you this instead.</p>
+  <p class="line">Thank you for being the softest part of my hardest days, and the best part of all the others.</p>
+  <p class="line">Every little thing you do makes my world brighter — and I hope this tiny letter makes yours a little brighter too.</p>
+
+  <!-- ✏️ sign-off -->
+  <p class="signoff line">With all my love,
+    <span class="sig">— Me ♡</span>
+  </p>
+  <p class="ps line">P.S. You looked lovely today. Yes, I'm sure. 💐</p>
+</article>
+
+<button class="fold-btn" id="foldBtn">fold it back 💌</button>
+
+<script>
+  const envelope = document.getElementById('envelope');
+  const envWrap  = document.getElementById('envWrap');
+  const seal     = document.getElementById('seal');
+  const hint     = document.getElementById('hint');
+  const card     = document.getElementById('readingCard');
+  const foldBtn  = document.getElementById('foldBtn');
+  const sky      = document.getElementById('sky');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- floating hearts backdrop --- */
+  const HEARTS = ['♥','♡','❀','✿'];
+  for (let i = 0; i < 14; i++){
+    const s = document.createElement('span');
+    s.textContent = HEARTS[i % HEARTS.length];
+    s.style.left = (Math.random()*100) + 'vw';
+    s.style.fontSize = (0.7 + Math.random()*1.3) + 'rem';
+    s.style.animationDuration = (9 + Math.random()*10) + 's';
+    s.style.animationDelay = (-Math.random()*14) + 's';
+    s.style.setProperty('--y', Math.random()*100);
+    sky.appendChild(s);
+  }
+
+  /* --- heart burst when the seal cracks --- */
+  function burstAt(x, y){
+    if (reduceMotion) return;
+    for (let i = 0; i < 14; i++){
+      const b = document.createElement('span');
+      b.className = 'burst';
+      b.textContent = Math.random() > .3 ? '♥' : '✦';
+      b.style.color = Math.random() > .5 ? 'var(--rose)' : 'var(--gold)';
+      const ang  = Math.random()*Math.PI*2;
+      const dist = 46 + Math.random()*74;
+      b.style.left = x + 'px';
+      b.style.top  = y + 'px';
+      b.style.setProperty('--dx', Math.cos(ang)*dist + 'px');
+      b.style.setProperty('--dy', Math.sin(ang)*dist - 26 + 'px');
+      b.style.setProperty('--rot', (Math.random()*220 - 110) + 'deg');
+      document.body.appendChild(b);
+      setTimeout(() => b.remove(), 950);
+    }
+  }
+
+  /* --- opening sequence --- */
+  let busy = false;
+  seal.addEventListener('click', () => {
+    if (busy || envelope.classList.contains('open')) return;
+    busy = true;
+
+    const r = seal.getBoundingClientRect();
+    burstAt(r.left + r.width/2, r.top + r.height/2);
+    seal.classList.add('cracked');
+    hint.classList.add('hidden');
+
+    setTimeout(() => envelope.classList.add('open'), 260);          // flap lifts
+    setTimeout(() => envelope.classList.add('flap-behind'), 660);   // flap tucks behind
+    setTimeout(() => {                                              // letter takes the stage
+      envWrap.classList.add('dimmed');
+      card.classList.add('show');
+      foldBtn.classList.add('show');
+      staggerLines(true);
+      busy = false;
+    }, reduceMotion ? 100 : 1500);
+  });
+
+  function staggerLines(on){
+    card.querySelectorAll('.line').forEach((el, i) => {
+      el.style.transitionDelay = on ? (0.15 + i*0.22) + 's' : '0s';
+    });
+  }
+
+  /* --- fold it back --- */
+  foldBtn.addEventListener('click', () => {
+    if (busy) return;
+    busy = true;
+    staggerLines(false);
+    card.classList.remove('show');
+    foldBtn.classList.remove('show');
+
+    setTimeout(() => {
+      envWrap.classList.remove('dimmed');
+      envelope.classList.remove('open');
+    }, 420);
+    setTimeout(() => envelope.classList.remove('flap-behind'), 900);
+    setTimeout(() => {
+      seal.classList.remove('cracked');
+      hint.classList.remove('hidden');
+      busy = false;
+    }, 1250);
+  });
+</script>
+</body>
+</html>
