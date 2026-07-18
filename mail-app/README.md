@@ -1,16 +1,25 @@
-# React + Vite
+# A Letter for You
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+An interactive old-style envelope and parchment letter built with React and CSS. The wax seal opens with a sequenced flap-and-letter animation, while the reading view supports keyboard focus, Escape-to-close, and reduced-motion preferences.
 
-Currently, two official plugins are available:
+## Personalise the letter
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Edit [`src/letterContent.js`](./src/letterContent.js). The recipient, seal initial, place, date, salutation, paragraphs, sign-off, signature, and postscript all live in that one object.
 
-## React Compiler
+## Run locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Use Node 20.19 or newer.
 
-## Expanding the Oxlint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Other available checks:
+
+```bash
+npm run lint
+npm run build
+```
+
+The envelope artwork, wax, stamp, desk texture, and parchment are all rendered in CSS/SVG, so the project does not depend on image assets for the effect.
