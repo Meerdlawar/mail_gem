@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Quicksand:wght@400;500&display=swap');
+
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #FDFBF7; /* Soft cream background */
+  font-family: 'Quicksand', sans-serif;
+}
+
+.envelope-wrapper {
+  position: relative;
+  width: 350px;
+  height: 250px;
+  cursor: pointer;
+  perspective: 1000px; /* Crucial for 3D flap fold */
+}
+
+/* The main envelope body */
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  background-color: #E6CACA; /* Slightly darker blush for depth */
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(200, 150, 150, 0.15);
+  z-index: 1;
+}
+
+.envelope-front {
+  position: absolute;
+  inset: 0;
+  background-color: #F2D8D8; /* Soft pink */
+  border-radius: 12px;
+  clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+  z-index: 4;
+}
+
+/* The top flap */
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #F2D8D8;
+  clip-path: polygon(0 0, 50% 50%, 100% 0);
+  transform-origin: top;
+  border-radius: 12px 12px 0 0;
+  z-index: 5;
+}
+
+/* The Wax Seal */
+.wax-seal {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background-color: #D4A373; /* Soft gold/rose */
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  z-index: 6;
+}
+
+/* The Letter Inside */
+.letter {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  height: 90%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+  z-index: 2; /* Sits between back and front of envelope */
+  font-family: 'Playfair Display', serif;
+  color: #4A4A4A;
+  text-align: center;
+}
+
+.letter h1 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.letter p {
+  font-size: 16px;
+  line-height: 1.6;
+}
