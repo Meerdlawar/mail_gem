@@ -95,7 +95,7 @@ export function Envelope({
           tabIndex={isReading ? -1 : 0}
           onClick={() => onOpen({ skipAnimation: true })}
         >
-          Read without ceremony
+          {/* Read without ceremony */}
         </button>
       </div>
     </div>

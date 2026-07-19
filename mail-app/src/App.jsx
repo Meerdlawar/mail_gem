@@ -98,7 +98,7 @@ function App() {
           </span>
           <div>
             <p className="masthead__title">Private correspondence</p>
-            <p className="masthead__number">Filed with care · No. 07</p>
+            {/* <p className="masthead__number">Filed with care · No. 07</p> */}
           </div>
         </div>
         <div className="masthead__rule" aria-hidden="true" />
